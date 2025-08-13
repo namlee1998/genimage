@@ -4,12 +4,11 @@ from PIL import Image
 import torch
 import random
 import os
-import shutil
+import uuid
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-
 
 # ===== Thiết lập thiết bị =====
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -45,34 +44,37 @@ def generate_image(prompt: str, seed=None, negative_prompt=None) -> str:
         image=pose_image,
         negative_prompt=negative_prompt or "low quality, blurry, bad anatomy, missing facial features, ugly eyes, extra limbs, deformed hands",
         guidance_scale=8.5,
-        num_inference_steps=70,
+        num_inference_steps=50,  # giảm để chạy nhanh hơn
         generator=generator
     ).images[0]
     
-    output_path = os.path.join("backend/static", "aiimg.png")
+    # Lưu file với UUID để tránh ghi đè
+    file_name = f"aiimg_{uuid.uuid4().hex}.png"
+    output_path = os.path.join("backend/static", file_name)
     image.save(output_path)
-    return output_path
+    return file_name
 
 # ===== FastAPI app =====
 app = FastAPI()
 
+# Không cần CORS nếu cùng domain, nhưng vẫn để phòng khi cần
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # hoặc chỉ domain frontend
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 @app.post("/api/generate")
 def generate(data: dict):
     prompt = data.get("prompt")
     print(f"Generating image for: {prompt}")
 
-    output_path = generate_image(prompt)
-    file_name = os.path.basename(output_path)
-    image_url = f"http://localhost:8000/{file_name}"
+    file_name = generate_image(prompt)
+    image_url = f"/{file_name}"  # Đường dẫn tương đối
 
     return JSONResponse({"image_url": image_url, "file_name": file_name})
-app.mount("/", StaticFiles(directory="backend/static", html=True), name="static")
+
+# Mount static files
+app.mount("/", StaticFiles(directory="backend/static"), name="static")
