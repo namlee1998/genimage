@@ -10,13 +10,6 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # hoặc chỉ domain frontend
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # ===== Thiết lập thiết bị =====
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -63,6 +56,14 @@ def generate_image(prompt: str, seed=None, negative_prompt=None) -> str:
 # ===== FastAPI app =====
 app = FastAPI()
 app.mount("/", StaticFiles(directory="backend/static", html=True), name="static")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # hoặc chỉ domain frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.post("/generate")
 def generate(data: dict):
