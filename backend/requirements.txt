@@ -1,10 +1,12 @@
 diffusers==0.25.0
-controlnet_aux 
-torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1
-fastapi 
-pillow 
+controlnet_aux
+torch==2.7.1
+torchvision==0.22.1
+torchaudio==2.7.1
+fastapi
+pillow
 uvicorn
 transformers
-accelerate 
-xformers==0.0.31.post1 
+accelerate
+xformers==0.0.31.post1
 huggingface_hub==0.25.2
