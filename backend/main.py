@@ -55,7 +55,7 @@ def generate_image(prompt: str, seed=None, negative_prompt=None) -> str:
 
 # ===== FastAPI app =====
 app = FastAPI()
-app.mount("/", StaticFiles(directory="backend/static", html=True), name="static")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # hoặc chỉ domain frontend
@@ -75,3 +75,4 @@ def generate(data: dict):
     image_url = f"http://localhost:8000/{file_name}"
 
     return JSONResponse({"image_url": image_url, "file_name": file_name})
+app.mount("/", StaticFiles(directory="backend/static", html=True), name="static")
