@@ -17,15 +17,12 @@ function Home() {
       setLoading(true);
       const res = await fetch("/api/generate", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
       });
 
       if (!res.ok) throw new Error("Failed to generate image");
 
-      // Backend trả về { image_url: "...", file_name: "..." }
       const data = await res.json();
 
       navigate("/result", { state: { imageUrl: data.image_url, fileName: data.file_name } });
@@ -44,9 +41,11 @@ function Home() {
       <input
         type="text"
         className="prompt-input"
-        placeholder="What’s going on in your mind now, my friend?"
+        placeholder="What’s going on in your mind now?"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
+        disabled={loading}
+        onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
       />
       <button
         className="download-btn"
