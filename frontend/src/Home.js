@@ -15,7 +15,7 @@ function Home() {
 
     try {
       setLoading(true);
-      const res = await fetch("/", {
+      const res = await fetch("/api/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
