@@ -65,7 +65,7 @@ app.add_middleware(
 )
 
 
-@app.post("/generate")
+@app.post("/api/generate")
 def generate(data: dict):
     prompt = data.get("prompt")
     print(f"Generating image for: {prompt}")
