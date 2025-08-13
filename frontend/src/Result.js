@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import "./App.css";
 
 function Result() {
   const location = useLocation();
@@ -11,21 +12,18 @@ function Result() {
     return null;
   }
 
-  const handleDownload = () => {
-    const a = document.createElement("a");
-    a.href = imageUrl;
-    a.download = fileName || "ai_image.png";
-    a.click();
-  };
-
   return (
     <div className="app">
-      <h1>Your Generated Image</h1>
-      <img src={imageUrl} alt="Generated" className="result-image" />
-      <br />
-      <button className="download-btn" onClick={handleDownload}>
-        Download
-      </button>
+      <h1 className="title">Your AI Image</h1>
+      <img src={imageUrl} alt="Generated" className="generated-image" />
+      <div className="button-group">
+        <a href={imageUrl} download={fileName}>
+          <button className="download-btn">Download</button>
+        </a>
+        <button className="back-btn" onClick={() => navigate("/")}>
+          Generate Another
+        </button>
+      </div>
     </div>
   );
 }
