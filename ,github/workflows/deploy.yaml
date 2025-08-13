@@ -1,5 +1,5 @@
 #ver1
-name: Deploy chatbot to Cloud Run
+name: Deploy genimg to Cloud Run
 #ver1
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    name: Build and Deploy Chatbot
+    name: Build and Deploy genimg
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +37,7 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        gcloud builds submit --tag gcr.io/root-slate-468501-c0/chatbot .
+        gcloud builds submit --tag gcr.io/root-slate-468501-c0/genimg .
 
     - name: Deploy to Cloud Run
       run: |
