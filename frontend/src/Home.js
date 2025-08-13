@@ -15,7 +15,7 @@ function Home() {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8080/", {
+      const res = await fetch("/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +39,7 @@ function Home() {
 
   return (
     <div className="app">
-      <img src="/images/aihead.JPEG" alt="AI Head" className="ai-image" />
+      <img src="/images/aihead.jpeg" alt="AI Head" className="ai-image" />
       <h1 className="title">AI Image Generator</h1>
       <input
         type="text"
