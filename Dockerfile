@@ -1,4 +1,4 @@
-# Stage 1: Build React frontend
+# Stage 1: Build React frontend .
 FROM node:18 AS frontend-builder
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
