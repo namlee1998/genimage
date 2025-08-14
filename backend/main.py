@@ -44,20 +44,21 @@ def generate_image(prompt: str, seed=None, negative_prompt=None) -> str:
         image=pose_image,
         negative_prompt=negative_prompt or "low quality, blurry, bad anatomy, missing facial features, ugly eyes, extra limbs, deformed hands",
         guidance_scale=8.5,
-        num_inference_steps=50,  # giảm để chạy nhanh hơn
+        num_inference_steps=50,
         generator=generator
     ).images[0]
     
-    # Lưu file với UUID để tránh ghi đè
+    # Lưu file với UUID
     file_name = f"aiimg_{uuid.uuid4().hex}.png"
-    output_path = os.path.join("backend/static", file_name)
+    output_path = os.path.join("backend/generated", file_name)
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     image.save(output_path)
     return file_name
 
 # ===== FastAPI app =====
 app = FastAPI()
 
-# Không cần CORS nếu cùng domain, nhưng vẫn để phòng khi cần
+# Middleware CORS (phòng trường hợp backend tách domain)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -72,9 +73,12 @@ def generate(data: dict):
     print(f"Generating image for: {prompt}")
 
     file_name = generate_image(prompt)
-    image_url = f"/{file_name}"  # Đường dẫn tương đối
+    image_url = f"/generated/{file_name}"  # ảnh sẽ nằm trong /generated
 
     return JSONResponse({"image_url": image_url, "file_name": file_name})
 
-# Mount static files
-app.mount("/", StaticFiles(directory="backend/static"), name="static")
+# Serve ảnh sinh ra
+app.mount("/generated", StaticFiles(directory="backend/generated"), name="generated")
+
+# Serve frontend build
+app.mount("/", StaticFiles(directory="backend/static", html=True), name="frontend")
