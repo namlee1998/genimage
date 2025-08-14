@@ -8,24 +8,20 @@ function Home() {
   const navigate = useNavigate();
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) {
-      alert("Please enter a prompt!");
-      return;
-    }
+    if (!prompt.trim()) return;
+    setLoading(true);
 
     try {
-      setLoading(true);
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({ prompt })
       });
 
-      if (!res.ok) throw new Error("Failed to generate image");
-
       const data = await res.json();
-
-      navigate("/result", { state: { imageUrl: data.image_url, fileName: data.file_name } });
+      // Lưu vào localStorage để reload không mất
+      localStorage.setItem("ai_image", JSON.stringify(data));
+      navigate("/result");
     } catch (err) {
       console.error(err);
       alert("Error generating image");
@@ -36,22 +32,15 @@ function Home() {
 
   return (
     <div className="app">
-      <img src="/images/aihead.jpeg" alt="AI Head" className="ai-image" />
       <h1 className="title">AI Image Generator</h1>
       <input
         type="text"
-        className="prompt-input"
-        placeholder="What’s going on in your mind now?"
+        placeholder="Enter your prompt..."
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
-        disabled={loading}
-        onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
+        className="prompt-input"
       />
-      <button
-        className="download-btn"
-        onClick={handleGenerate}
-        disabled={loading}
-      >
+      <button onClick={handleGenerate} disabled={loading}>
         {loading ? "Generating..." : "Generate"}
       </button>
     </div>
