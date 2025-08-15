@@ -69,7 +69,4 @@ jobs:
           --region asia-southeast1 \
           --member="allUsers" \
           --role="roles/run.invoker" \
-          --cpu=4 \
-          --max-instances 1 \
-          --memory=16Gi
           --project root-slate-468501-c0
