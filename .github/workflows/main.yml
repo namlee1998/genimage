@@ -45,7 +45,7 @@ jobs:
           --region asia-southeast1 \
           --platform managed \
           --allow-unauthenticated \
-          --timeout=600 \
+          --timeout=1200 \
           --cpu=4 \
           --max-instances 1 \
           --memory=16Gi
