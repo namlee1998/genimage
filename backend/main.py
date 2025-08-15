@@ -39,6 +39,9 @@ def generate_image(prompt: str, seed=None, negative_prompt=None) -> str:
         seed = random.randint(0, 100000)
     generator = torch.Generator(device).manual_seed(seed)
 
+    # Đặt lại timesteps cho scheduler
+    pipe.scheduler.set_timesteps(50)
+
     image = pipe(
         prompt=prompt,
         image=pose_image,
@@ -48,12 +51,12 @@ def generate_image(prompt: str, seed=None, negative_prompt=None) -> str:
         generator=generator
     ).images[0]
     
-    # Lưu file với UUID
     file_name = f"aiimg_{uuid.uuid4().hex}.png"
     output_path = os.path.join("backend/generated", file_name)
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     image.save(output_path)
     return file_name
+
 
 # ===== FastAPI app =====
 app = FastAPI()
