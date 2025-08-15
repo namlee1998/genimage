@@ -46,8 +46,9 @@ jobs:
           --platform managed \
           --allow-unauthenticated \
           --timeout=600 \
-          --cpu=2 \
-          --memory=8Gi
+          --cpu=4 \
+          --max-instances 1 \
+          --memory=16Gi
 
     - name: Wait for service to be ready
       run: |
