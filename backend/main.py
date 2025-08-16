@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 # ===== Thiết lập thiết bị =====
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -69,9 +70,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-@app.get("/")
-def health_check():
+app.mount("/static", StaticFiles(directory="backend/static"), name="static")
+
+# API sample
+@app.get("/api/status")
+def status():
     return {"status": "ok"}
+
+# Catch-all route: serve React index.html
+
 @app.post("/api/generate")
 def generate(data: dict):
     prompt = data.get("prompt")
