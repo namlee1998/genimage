@@ -28,7 +28,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY backend/trainimage.jpg /app/backend/trainimage.jpg
 COPY backend/ ./backend
-COPY --from=frontend-builder /app/frontend/build ./backend/static
+COPY --from=frontend-builder /app/frontend/build ./backend/build
 RUN mkdir -p backend/generated
 
 EXPOSE 8080
