@@ -93,4 +93,5 @@ def generate(data: dict):
 app.mount("/generated", StaticFiles(directory="backend/generated"), name="generated")
 
 # Serve frontend build
-app.mount("/", StaticFiles(directory="backend/static", html=True), name="frontend")
+app.mount("/", StaticFiles(directory="backend/build", html=True), name="frontend")
+
