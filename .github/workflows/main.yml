@@ -36,7 +36,7 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        gcloud builds submit --tag gcr.io/root-slate-468501-c0/genimg .
+        gcloud builds submit --no-cache --tag gcr.io/root-slate-468501-c0/genimg .
 
     - name: Deploy to Cloud Run
       run: |
