@@ -70,28 +70,27 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# Mount các thư mục tĩnh
 app.mount("/static", StaticFiles(directory="backend/static"), name="static")
+app.mount("/generated", StaticFiles(directory="backend/generated"), name="generated")
 
 # API sample
 @app.get("/api/status")
 def status():
     return {"status": "ok"}
 
-# Catch-all route: serve React index.html
-
+# API generate
 @app.post("/api/generate")
 def generate(data: dict):
     prompt = data.get("prompt")
     print(f"Generating image for: {prompt}")
 
     file_name = generate_image(prompt)
-    image_url = f"/generated/{file_name}"  # ảnh sẽ nằm trong /generated
+    image_url = f"/generated/{file_name}"
 
     return JSONResponse({"image_url": image_url, "file_name": file_name})
 
-# Serve ảnh sinh ra
-app.mount("/generated", StaticFiles(directory="backend/generated"), name="generated")
-
-# Serve frontend build
-app.mount("/", StaticFiles(directory="backend/build", html=True), name="frontend")
+# Serve React build
+frontend_dir = os.path.join(os.path.dirname(__file__), "build")
+app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
