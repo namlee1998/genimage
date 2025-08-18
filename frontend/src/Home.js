@@ -15,7 +15,7 @@ function Home() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt })
+        body: JSON.stringify({ prompt }),
       });
 
       const data = await res.json();
@@ -31,36 +31,43 @@ function Home() {
   };
 
   return (
-  <div className="flex flex-col items-center justify-center min-h-screen bg-yellow-200 p-6">
-    {/* Ảnh AI */}
-    <img
-      src="/images/aihead.jpeg"
-      alt="AI Head"
-      className="w-60 h-60 mb-6 rounded-full shadow-lg object-cover"
-    />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-yellow-200 p-6">
+      {/* Ảnh AI */}
+      <img
+        src="/images/aihead.jpeg"
+        alt="AI Head"
+        className="w-60 h-60 mb-6 rounded-full shadow-lg object-cover"
+      />
 
-    {/* Tiêu đề */}
-    <h1
-      className="text-3xl font-bold mb-6"
-      style={{
-        textShadow: "2px 2px 4px #800080, -2px -2px 4px #ff0000",
-      }}
-    >
-      AI Image Generator
-    </h1>
+      {/* Tiêu đề */}
+      <h1
+        className="text-3xl font-bold mb-6"
+        style={{
+          textShadow: "2px 2px 4px #800080, -2px -2px 4px #ff0000",
+        }}
+      >
+        AI Image Generator
+      </h1>
 
-    {/* Ô nhập prompt */}
-    <input
-      type="text"
-      placeholder="What’s is going on in your mind now, my friend?"
-      className="w-full max-w-md p-3 mb-10 border-2 border-gray-400 rounded-lg shadow-md text-center text-black focus:outline-none focus:border-purple-500"
-    />
+      {/* Ô nhập prompt */}
+      <input
+        type="text"
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        placeholder="What’s is going on in your mind now, my friend?"
+        className="w-full max-w-md p-3 mb-10 border-2 border-gray-400 rounded-lg shadow-md text-center text-black focus:outline-none focus:border-purple-500"
+      />
 
-    {/* Nút Download */}
-    <button className="px-6 py-2 bg-red-600 text-black font-bold rounded-full shadow-md hover:bg-red-700">
-      Download
-    </button>
-  </div>
-);
+      {/* Nút Generate */}
+      <button
+        onClick={handleGenerate}
+        disabled={loading}
+        className="px-6 py-2 bg-red-600 text-black font-bold rounded-full shadow-md hover:bg-red-700 disabled:opacity-50"
+      >
+        {loading ? "Generating..." : "Generate"}
+      </button>
+    </div>
+  );
+}
 
 export default Home;
