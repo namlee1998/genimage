@@ -90,9 +90,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount static & generated
-app.mount("/static", StaticFiles(directory="backend/static"), name="static")
-app.mount("/generated", StaticFiles(directory="backend/generated"), name="generated")
 
 # =========================
 # API Endpoints
@@ -117,5 +114,12 @@ def generate(data: dict):
 # Serve React build
 # =========================
 frontend_dir = os.path.join(os.path.dirname(__file__), "build")
-if os.path.exists(frontend_dir):
-    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
+
+# Serve frontend static (css, js)
+app.mount("/static", StaticFiles(directory=os.path.join(frontend_dir, "static")), name="static")
+
+# Serve generated images
+app.mount("/generated", StaticFiles(directory="backend/generated"), name="generated")
+
+# Serve React index.html
+app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
