@@ -42,4 +42,4 @@ COPY --from=frontend-builder /app/frontend/build ./backend/build
 RUN mkdir -p backend/generated backend/static
 
 EXPOSE 8080
-CMD ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT}"]
+CMD ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT}", "--timeout-keep-alive", "120"]
