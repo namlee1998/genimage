@@ -15,6 +15,10 @@ function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
       });
+      if (!res.ok) {
+        const text = await res.text(); // lấy raw text
+        throw new Error(`Server error: ${res.status} - ${text}`);
+      }
       const data = await response.json();
       setAudioUrl(data.url);
     } catch (err) {
