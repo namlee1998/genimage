@@ -13,6 +13,19 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    # Build & push Docker image
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/genimage:latest
 
     - name: Decode service account key
       run: echo "${{ secrets.GCP_SA_KEY }}" | base64 --decode > key.json
@@ -34,10 +47,6 @@ jobs:
         gcloud services enable run.googleapis.com
         gcloud services enable cloudbuild.googleapis.com
 
-    - name: Build and push Docker image
-      run: |
-        gcloud builds submit --tag gcr.io/root-slate-468501-c0/genimg .
-
     - name: Deploy to Cloud Run
       run: |
         gcloud run deploy genimg \
@@ -50,23 +59,4 @@ jobs:
           --max-instances 1 \
           --memory=16Gi
 
-    - name: Wait for service to be ready
-      run: |
-        echo "⏳ Waiting for Cloud Run service to be ready..."
-        for i in {1..10}; do
-          STATUS=$(gcloud run services describe genimg --region asia-southeast1 --format='value(status.conditions[0].status)')
-          if [ "$STATUS" == "True" ]; then
-            echo "✅ Service is ready!"
-            break
-          fi
-          echo "Still starting... retry in 10s"
-          sleep 10
-        done
-
-    - name: Allow unauthenticated invocations
-      run: |
-        gcloud run services add-iam-policy-binding genimg \
-          --region asia-southeast1 \
-          --member="allUsers" \
-          --role="roles/run.invoker" \
-          --project root-slate-468501-c0
+    
