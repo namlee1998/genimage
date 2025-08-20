@@ -13,9 +13,8 @@ from fastapi.middleware.cors import CORSMiddleware
 # =========================
 # Thiết lập thiết bị
 # =========================
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-TORCH_DTYPE = torch.float16 if DEVICE == "cuda" else torch.float32
-
+DEVICE = "cpu"
+TORCH_DTYPE = torch.float32
 # =========================
 # Load ảnh gốc
 # =========================
