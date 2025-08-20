@@ -58,8 +58,5 @@ jobs:
           --cpu=4 \
           --max-instances 1 \
           --memory=16Gi
-          --cpu=4 \
-          --max-instances 1 \
-          --memory=16Gi
 
     
