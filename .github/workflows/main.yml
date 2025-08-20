@@ -50,11 +50,14 @@ jobs:
     - name: Deploy to Cloud Run
       run: |
         gcloud run deploy genimg \
-          --image gcr.io/root-slate-468501-c0/genimg \
+          --image docker.io/${{ secrets.DOCKERHUB_USERNAME }}/genimage:latest \
           --region asia-southeast1 \
           --platform managed \
           --allow-unauthenticated \
           --timeout=1200 \
+          --cpu=4 \
+          --max-instances 1 \
+          --memory=16Gi
           --cpu=4 \
           --max-instances 1 \
           --memory=16Gi
