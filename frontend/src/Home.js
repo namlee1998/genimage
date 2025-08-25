@@ -30,7 +30,7 @@ function App() {
   return (
     <div className="App">
       <div className="container">
-        <h1 className="title">AI Music Generator</h1>
+        <h1 className="title">AI Image Generator</h1>
         <textarea
           className="prompt-box"
           placeholder="Enter your prompt..."
